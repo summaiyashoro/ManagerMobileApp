@@ -9,7 +9,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import {connect, useDispatch} from "react-redux";
 
 import MyAppTextInput from '../components/MyAppTextInput';
 import ForgetPasswordButton from './ForgetPasswordButton';
@@ -20,7 +19,9 @@ import colors from '../config/colors';
 
 import axios from "../util/axios";
 import endpoints from "../consts/config";
+import {connect} from "react-redux";
 import { store_user_data} from "../store/action/UserDataActionCreator";
+import userDataReducer from "../store/reducer/UserDataReducer";
 
 const validationSchema = yup.object({
   email: yup.string().required().email().label('Email'),
@@ -29,6 +30,7 @@ const validationSchema = yup.object({
 
 const SignInScreen = ({ navigation , ...props }) => {
   const [passwordIcon, setPasswordIcon] = useState("eye-off");
+
 
   useEffect(()=>{
     //  console.log("===> " , props.userData.age);
@@ -50,7 +52,10 @@ const SignInScreen = ({ navigation , ...props }) => {
       .post(endpoints.LOGIN ,param)
       .then(res =>{
          console.log(res.data);
-         props.storeUserData(res.data);
+         props.store_user_data(res.data);
+        //  console.log(props.userData.Data.FullName);
+        // console.log(props.userData);
+         navigation.replace('logedIn');
       })
       .catch(err => console.log(err));
     }
@@ -143,7 +148,8 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    marginHorizontal:10
   },
   headerText: {
     color: colors.white,
@@ -162,8 +168,11 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps =  (dispatch) =>{
   return{
-    storeUserData: (userData) => dispatch(store_user_data(userData)),
+    store_user_data: (userData) => dispatch({
+      type: 'STORE_USER_DATA',
+      payload:userData
+    }),
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(SignInScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen);

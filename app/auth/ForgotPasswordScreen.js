@@ -14,12 +14,14 @@ import ErrorMessage from '../components/ErrorMessage';
 import SaveButton from '../buttons/SaveButton';
 import LoginButton from '../buttons/LoginButton';
 import colors from '../config/colors';
-
 import MyAppTextInput from '../components/MyAppTextInput';
 import AppText from '../components/AppText';
 
+import axios from "../util/axios";
+import endpoints from "../consts/config";
+
 const validationSchema = yup.object({
-    password: yup.string().required().min(8).max(20).label('Password'),
+    password: yup.string().required().min(6).max(20).label('Password'),
     confirmPassword: yup.string().required().oneOf([yup.ref('password'), null], 'Password must match!').label('Password')
 })
 
@@ -29,7 +31,22 @@ const ForgetPasswordScreen = ({navigation}) =>{
 
     function handleSubmit  (values){
         if(values.password.length > 0 && values.confirmPassword.length > 0 ){
-          navigation.navigate('Login');
+        //   navigation.navigate('Login');
+
+        const param = {
+        // UserID: 12,   //will get from redux later
+		// OldPassword: values.password,
+		// NewPassword: values.confirmPassword
+        EmailAddress: "mukhi.aadesh@mailinator.com"
+        }
+
+        axios
+        .post(endpoints.FORGOT_PASSWORD,param)
+        .then(res =>{
+            console.log('working');
+            navigation.navigate('Login');
+        })
+        .catch(err => console.log(err))
         }
       }
 

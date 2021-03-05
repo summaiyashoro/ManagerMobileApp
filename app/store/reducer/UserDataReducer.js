@@ -2,17 +2,22 @@ import { STORE_USER_DATA } from "../action/ActionType";
 
 
 const initialState = {
-    userData:null,
-    temp:'sumaiya',
-    age:'10'
+    userData:[]
+    // temp:'sumaiya',
+    // age:'10'
 }
 
 const reducer = (state = initialState , action) =>{
   switch (action.type) {
       case STORE_USER_DATA:
           console.log('fired');
-          //logic for storing user data
-          return state;
+        //   return Object.assign({},state,{
+        //      userData : action.payload,
+        //   })
+        return{
+          ...state,
+          userData:action.payload
+        }
       default:
        return state;
   }

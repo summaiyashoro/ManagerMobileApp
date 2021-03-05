@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, ScrollView, StyleSheet } from 'react-native';
 
 import AccountSettingHeader from './AccountSettingHeader';
@@ -14,7 +14,14 @@ import defaultProfileUri from "../components/defaultProfile";
 const imageSource = defaultProfileUri;
 import Screen from '../screens/Screen';
 
-function SettingScreen({ navigation }) {
+import { connect } from "react-redux";
+import userDataReducer from "../store/reducer/UserDataReducer";
+
+function SettingScreen({ navigation, ...props }) {
+
+    useEffect(()=>{
+        console.log(props.userData);
+    },[])
 
     return (
         <Screen>
@@ -60,4 +67,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SettingScreen;
+const mapStateToProps = (state)=>{
+    return{
+        userData : state.UserDataReducer
+    }
+}
+
+export default connect(mapStateToProps)(SettingScreen);
